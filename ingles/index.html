@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Inglés - Primer Grado</title>
+    
+    <!-- ==================== ESTILOS CSS ==================== -->
+    <style>
+        /* ----- Estilos Generales ----- */
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 30px;
+        }
+        
+        /* ----- Estilos de Navegación y Modos ----- */
+        .modes {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            background-color: #118ab2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 16px;
+        }
+        .mode-btn.active {
+            background-color: #073b4c;
+        }
+        .score {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* ----- Estilos del Juego Principal (Objetos y Colores) ----- */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .question-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #073b4c;
+            font-weight: bold;
+        }
+        .image-container {
+            width: 300px;
+            height: 300px;
+            border: 3px solid #ffd166;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            background-color: white;
+        }
+        .image-container img {
+            max-width: 80%;
+            max-height: 80%;
+            width: 150px;
+            height: 150px;
+        }
+        .option-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .option {
+            background-color: #4ecdc4;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        .option:hover {
+            transform: scale(1.05);
+            background-color: #ff9a8b;
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            height: 40px;
+            margin: 10px 0;
+        }
+        .correct {
+            color: #06d6a0;
+        }
+        .incorrect {
+            color: #ef476f;
+        }
+        .next-btn {
+            background-color: #ffd166;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .next-btn:hover {
+            background-color: #ffb703;
+        }
+        
+        /* ----- Estilos de Colores ----- */
+        .colors-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        #colorBox {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        #colorBox:hover {
+            transform: scale(1.05);
+        }
+        
+        /* ----- Estilos de Lectura ----- */
+        .reading-container {
+            display: none;
+            background-color: #fff4e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 20px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .reading-container p {
+            margin-bottom: 15px;
+        }
+        .reading-container .highlight {
+            font-weight: bold;
+            color: #ff6b6b;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .reading-title {
+            text-align: center;
+            font-size: 24px;
+            color: #073b4c;
+            margin-bottom: 20px;
+        }
+        .reading-image {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px auto;
+            display: block;
+        }
+        .reading-btn {
+            background-color: #118ab2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .vocabulary-list {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            columns: 2;
+        }
+        .vocabulary-list li {
+            margin-bottom: 8px;
+        }
+        
+        /* ----- Estilos Canción del Alfabeto ----- */
+        .alphabet-song-container {
+            display: none;
+            background-color: #f0faff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .lyrics-container {
+            margin: 30px 0;
+            font-size: 22px;
+            line-height: 1;
+        }
+        .lyrics {
+            margin: 15px 0;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+         /* Mejoras al estilo active-line */
+    .lyrics.active-line {
+        font-weight: bold;
+        color: #333;
+        font-size: 28px;
+        transform: scale(1.05);
+    }
+    
+    /* Añadir animación de colores a las letras individuales */
+    .lyrics.active-line span {
+        display: inline-block;
+        padding: 0 2px;
+        border-radius: 4px;
+        animation: letterColorChange 2s infinite;
+    }
+    
+    @keyframes letterColorChange {
+        0% { color: #FF9AA2; }
+        20% { color: #FF6B6B; }
+        40% { color: #4ECDC4; }
+        60% { color: #118AB2; }
+        80% { color: #073B4C; }
+        100% { color: #FF9AA2; }
+    }
+        .alphabet-display {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+            align-items: center;
+        }
+        .alphabet-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .alphabet-letter {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffb703;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .alphabet-letter:hover {
+            transform: scale(1.1);
+            background-color: #ff9500;
+        }
+        .alphabet-letter.active {
+            background-color: #ff6b6b;
+            color: white;
+            transform: scale(1.2);
+        }
+        .song-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .control-btn {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #4ecdc4;
+            color: white;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .control-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* ----- Estilos Juego del Alfabeto ----- */
+        .alphabet-game-container {
+            display: none;
+            background-color: #f0faff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .alphabet-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 30px auto;
+            max-width: 500px;
+        }
+        .alphabet-tile {
+            width: 60px;
+            height: 60px;
+            background-color: #ffb703;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .alphabet-tile:hover {
+            transform: scale(1.05);
+        }
+        .game-instruction {
+            font-size: 24px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        #targetLetter {
+            color: #ff6b6b;
+            font-size: 36px;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .feedback-container {
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .feedback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .feedback-emoji {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+        .feedback p {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #correctFeedback p {
+            color: #06d6a0;
+        }
+        #wrongFeedback p {
+            color: #ef476f;
+        }
+        .abc-score {
+            font-size: 20px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ==================== ESTRUCTURA HTML ==================== -->
+    <div class="container">
+        <h1>¡Aprende Inglés Jugando!</h1>
+        
+        <!-- Navegación entre modos de juego -->
+        <div class="modes">
+            <button class="mode-btn active" id="objectsMode">Objects (Objetos)</button>
+            <button class="mode-btn" id="colorsMode">Colors (Colores)</button>
+            <button class="mode-btn" id="readingMode">Reading (Lectura)</button>
+            <button class="mode-btn" id="alphabetSongMode">ABC Song (Canción)</button>
+            <button class="mode-btn" id="alphabetGameMode">ABC Game (Juego)</button>
+        </div>
+        
+        <!-- Puntuación -->
+        <div class="score">Puntos: <span id="scoreValue">0</span></div>
+        
+        <!-- Contenedor principal del juego (objetos y colores) -->
+        <div class="game-container" id="gameContainer">
+            <div class="question-text" id="questionText">What is this? (¿Qué es esto?)</div>
+            
+            <div class="image-container">
+                <img id="objectImage" src="" alt="Object Image">
+            </div>
+            
+            <div class="option-container" id="optionContainer"></div>
+            
+            <div class="colors-container" id="colorsContainer" style="display: none;"></div>
+            
+            <div class="result" id="result"></div>
+            
+            <button class="next-btn" id="nextBtn">Next (Siguiente)</button>
+        </div>
+        
+        <!-- Sección de lectura -->
+        <div class="reading-container" id="readingContainer">
+            <h2 class="reading-title">My Classroom (Mi Aula de Clases)</h2>
+            
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f3eb.svg" class="reading-image" alt="School">
+            
+            <p>Hello! Welcome to my <span class="highlight">classroom</span>! My name is Ana.</p>
+            
+            <p>I love my <span class="highlight">classroom</span>. It has a big <span class="highlight">door</span>. The <span class="highlight">door</span> is brown.</p>
+            
+            <p>Look at the <span class="highlight">board</span>! The <span class="highlight">board</span> is green. My teacher writes on the <span class="highlight">board</span>.</p>
+            
+            <p>I sit on a <span class="highlight">chair</span>. My <span class="highlight">chair</span> is blue. I put my books on my <span class="highlight">desk</span>. The <span class="highlight">desk</span> is brown.</p>
+            
+            <p>Our <span class="highlight">classroom</span> has four <span class="highlight">windows</span>. The <span class="highlight">windows</span> are big. I can see the playground through the <span class="highlight">windows</span>.</p>
+            
+            <p>We have a <span class="highlight">cabinet</span> for our books. The <span class="highlight">cabinet</span> is yellow. We also have a <span class="highlight">trash bin</span>. The <span class="highlight">trash bin</span> is green.</p>
+            
+            <p>Look at the <span class="highlight">clock</span> on the wall! The <span class="highlight">clock</span> tells us when it's time to play and when it's time to learn.</p>
+            
+            <p>I love learning in my <span class="highlight">classroom</span>!</p>
+            
+            <div class="vocabulary-list">
+                <h3>Vocabulary (Vocabulario):</h3>
+                <ul>
+                    <li><strong>classroom</strong> = aula de clases</li>
+                    <li><strong>door</strong> = puerta</li>
+                    <li><strong>board</strong> = pizarra</li>
+                    <li><strong>chair</strong> = silla</li>
+                    <li><strong>desk</strong> = escritorio</li>
+                    <li><strong>window</strong> = ventana</li>
+                    <li><strong>cabinet</strong> = gabinete</li>
+                    <li><strong>trash bin</strong> = basurero</li>
+                    <li><strong>clock</strong> = reloj</li>
+                </ul>
+            </div>
+            
+            <button class="reading-btn" id="readAgainBtn">Read Again (Leer de nuevo)</button>
+            <button class="reading-btn" id="backToGameBtn">Back to Game (Volver al juego)</button>
+        </div>
+        
+        <!-- Sección de la canción del alfabeto -->
+        <div class="alphabet-song-container" id="alphabetSongContainer">
+            <h2 class="reading-title">The Alphabet Song (La Canción del Abecedario)</h2>
+            
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f3b5.svg" class="reading-image" alt="Music">
+            <audio id="alphabetSongAudio" preload="auto">
+                <source src="abc-song.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <div class="lyrics-container">
+                <p class="lyrics" id="line1">A - B - C - D - E - F - G</p>
+                <p class="lyrics" id="line2">H - I - J - K - L - M - N - O - P</p>
+                <p class="lyrics" id="line3">Q - R - S - T - U - V</p>
+                <p class="lyrics" id="line4">W - X - Y and Z</p>
+                <p class="lyrics" id="line5">Now I know my ABCs</p>
+                <p class="lyrics" id="line6">Next time won't you sing with me?</p>
+            </div>
+            
+            <div class="song-controls">
+                <button class="control-btn" id="rewindBtn">⏪ (Retroceder)</button>
+                <button class="control-btn" id="playBtn">▶️ Play (Reproducir)</button>
+                <button class="control-btn" id="pauseBtn" disabled>⏸️ Pause (Pausar)</button>
+                <button class="control-btn" id="forwardBtn">⏩ +10s (Avanzar)</button>
+                <button class="control-btn" id="resetBtn">🔄 Reset</button>
+            </div>
+            
+            <button class="reading-btn" id="backFromSongBtn">Back to Game (Volver al juego)</button>
+        </div>
+        
+        <!-- Sección del juego del alfabeto -->
+        <div class="alphabet-game-container" id="alphabetGameContainer">
+            <h2 class="reading-title">Alphabet Game (Juego del Abecedario)</h2>
+            
+            <div class="game-instruction" id="letterInstruction">
+                Click on the letter: <span id="targetLetter">A</span>
+            </div>
+            
+            <div class="alphabet-board" id="alphabetBoard">
+                <!-- Las letras se generarán dinámicamente con JavaScript -->
+            </div>
+            
+            <div class="feedback-container">
+                <div class="feedback" id="correctFeedback" style="display: none;">
+                    <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f44d.svg" alt="Correct" class="feedback-emoji">
+                    <p>¡Muy bien! / Great job!</p>
+                </div>
+                <div class="feedback" id="wrongFeedback" style="display: none;">
+                    <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f615.svg" alt="Wrong" class="feedback-emoji">
+                    <p>Intenta otra vez / Try again</p>
+                </div>
+            </div>
+            
+            <div class="abc-score">
+                Aciertos: <span id="abcScore">0</span> / 26
+            </div>
+            
+            <button class="reading-btn" id="resetAlphabetGameBtn">Reset Game (Reiniciar)</button>
+            <button class="reading-btn" id="backFromAlphabetBtn">Back to Game (Volver al juego)</button>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ===== 1. DATOS DEL JUEGO =====
+        const classroomObjects = [
+            { 
+                name: 'door', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f6aa.svg', 
+                translation: 'Puerta' 
+            },
+            { 
+                name: 'board', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f4dd.svg', 
+                translation: 'Pizarra' 
+            },
+            { 
+                name: 'desk', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f4cf.svg', 
+                translation: 'Escritorio' 
+            },
+            { 
+                name: 'chair', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1fa91.svg', 
+                translation: 'Silla' 
+            },
+            { 
+                name: 'window', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1fa9f.svg', 
+                translation: 'Ventana' 
+            },
+            { 
+                name: 'cabinet', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f5c4.svg', 
+                translation: 'Gabinete' 
+            },
+            { 
+                name: 'trash bin', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f5d1.svg', 
+                translation: 'Basurero' 
+            },
+            { 
+                name: 'clock', 
+                image: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f570.svg', 
+                translation: 'Reloj' 
+            }
+        ];
+
+        const colors = [
+            { name: 'red', hex: '#ff0000', translation: 'Rojo' },
+            { name: 'blue', hex: '#0000ff', translation: 'Azul' },
+            { name: 'green', hex: '#008000', translation: 'Verde' },
+            { name: 'yellow', hex: '#ffff00', translation: 'Amarillo' },
+            { name: 'black', hex: '#000000', translation: 'Negro' },
+            { name: 'white', hex: '#ffffff', translation: 'Blanco' },
+            { name: 'brown', hex: '#a52a2a', translation: 'Marrón' },
+            { name: 'purple', hex: '#800080', translation: 'Morado' }
+        ];
+
+        // ===== 2. VARIABLES GLOBALES =====
+        let currentMode = 'objects';
+        let currentObject = null;
+        let currentColor = null;
+        let score = 0;
+        let alphabetSongInterval = null;
+        let currentLine = 1;
+        let alphabetGameScore = 0;
+        let currentTargetLetter = 'A';
+        let lettersFound = [];
+        let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+        // ===== 3. ELEMENTOS DEL DOM =====
+        const objectImage = document.getElementById('objectImage');
+        const optionContainer = document.getElementById('optionContainer');
+        const colorsContainer = document.getElementById('colorsContainer');
+        const resultElement = document.getElementById('result');
+        const scoreValue = document.getElementById('scoreValue');
+        const nextBtn = document.getElementById('nextBtn');
+        const questionText = document.getElementById('questionText');
+
+        // ===== 4. INICIALIZACIÓN DEL JUEGO =====
+        function initGame() {
+            score = 0;
+            scoreValue.textContent = score;
+            nextQuestion();
+            
+            // Configurar botones de modo
+            document.getElementById('objectsMode').addEventListener('click', () => {
+                setMode('objects');
+            });
+            
+            document.getElementById('colorsMode').addEventListener('click', () => {
+                setMode('colors');
+            });
+            
+            // Modo de lectura
+            document.getElementById('readingMode').addEventListener('click', () => {
+                showSection('reading');
+            });
+            
+            document.getElementById('readAgainBtn').addEventListener('click', () => {
+                // Volver al inicio de la lectura
+                document.getElementById('readingContainer').scrollTo(0, 0);
+            });
+            
+            document.getElementById('backToGameBtn').addEventListener('click', () => {
+                setMode('objects');
+            });
+            
+            // Modo de canción del alfabeto
+            document.getElementById('alphabetSongMode').addEventListener('click', () => {
+                showSection('alphabetSong');
+                stopAlphabetSong();
+            });
+            
+            document.getElementById('playBtn').addEventListener('click', () => {
+                playAlphabetSong();
+            });
+            
+            document.getElementById('pauseBtn').addEventListener('click', () => {
+                pauseAlphabetSong();
+            });
+            
+            document.getElementById('stopBtn').addEventListener('click', () => {
+                stopAlphabetSong();
+            });
+            
+            document.getElementById('backFromSongBtn').addEventListener('click', () => {
+                stopAlphabetSong();
+                setMode('objects');
+            });
+            
+            // Modo de juego del alfabeto
+            document.getElementById('alphabetGameMode').addEventListener('click', () => {
+                showSection('alphabetGame');
+                initAlphabetGame();
+            });
+            
+            document.getElementById('resetAlphabetGameBtn').addEventListener('click', () => {
+                initAlphabetGame();
+            });
+            
+            document.getElementById('backFromAlphabetBtn').addEventListener('click', () => {
+                setMode('objects');
+            });
+            
+            // Destacar cada palabra del vocabulario al hacer clic en ella
+            const highlightWords = document.querySelectorAll('.highlight');
+            highlightWords.forEach(word => {
+                word.addEventListener('click', () => {
+                    word.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        word.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+            
+            nextBtn.addEventListener('click', nextQuestion);
+            
+            // Crear el tablero del alfabeto
+            createAlphabetBoard();
+        }
+
+        // ===== 5. FUNCIONES DE NAVEGACIÓN ENTRE SECCIONES =====
+        function showSection(section) {
+            // Ocultar todas las secciones
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('readingContainer').style.display = 'none';
+            document.getElementById('alphabetSongContainer').style.display = 'none';
+            document.getElementById('alphabetGameContainer').style.display = 'none';
+            
+            // Desactivar todos los botones de modo
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar la sección apropiada y activar el botón correspondiente
+            switch(section) {
+                case 'objects':
+                case 'colors':
+                    document.getElementById('gameContainer').style.display = 'flex';
+                    document.getElementById(section + 'Mode').classList.add('active');
+                    break;
+                case 'reading':
+                    document.getElementById('readingContainer').style.display = 'block';
+                    document.getElementById('readingMode').classList.add('active');
+                    break;
+                case 'alphabetSong':
+                    document.getElementById('alphabetSongContainer').style.display = 'block';
+                    document.getElementById('alphabetSongMode').classList.add('active');
+                    break;
+                case 'alphabetGame':
+                    document.getElementById('alphabetGameContainer').style.display = 'block';
+                    document.getElementById('alphabetGameMode').classList.add('active');
+                    break;
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Mostrar la sección apropiada
+            showSection(mode);
+            
+            if (mode === 'objects') {
+                optionContainer.style.display = 'flex';
+                colorsContainer.style.display = 'none';
+                questionText.textContent = 'What is this? (¿Qué es esto?)';
+                nextQuestion();
+            } else if (mode === 'colors') {
+                optionContainer.style.display = 'none';
+                colorsContainer.style.display = 'flex';
+                questionText.textContent = 'What color is it? (¿De qué color es?)';
+                nextQuestion();
+            }
+        }
+
+        // ===== 6. FUNCIONES DEL JUEGO PRINCIPAL (OBJETOS Y COLORES) =====
+        function nextQuestion() {
+            resultElement.textContent = '';
+            resultElement.className = 'result';
+            
+            // Restablecer la visualización de la imagen
+            objectImage.style.display = 'block';
+            document.querySelector('.image-container').innerHTML = '';
+            document.querySelector('.image-container').appendChild(objectImage);
+            
+            if (currentMode === 'objects') {
+                generateObjectQuestion();
+            } else {
+                generateColorQuestion();
+            }
+        }
+
+        // ===== 7. FUNCIONES DEL MODO DE OBJETOS =====
+        function generateObjectQuestion() {
+            // Elegir un objeto aleatorio
+            currentObject = classroomObjects[Math.floor(Math.random() * classroomObjects.length)];
+            objectImage.src = currentObject.image;
+            objectImage.alt = currentObject.name;
+            
+            // Crear opciones (4 opciones aleatorias incluyendo la correcta)
+            optionContainer.innerHTML = '';
+            
+            let options = [currentObject.name];
+            while (options.length < 4) {
+                const randomObject = classroomObjects[Math.floor(Math.random() * classroomObjects.length)].name;
+                if (!options.includes(randomObject)) {
+                    options.push(randomObject);
+                }
+            }
+            
+            // Mezclar opciones
+            options = shuffleArray(options);
+            
+            // Crear botones de opciones
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                
+                optionElement.addEventListener('click', () => {
+                    checkObjectAnswer(option);
+                });
+                
+                optionContainer.appendChild(optionElement);
+            });
+        }
+
+        // Verificar respuesta de objeto
+        function checkObjectAnswer(answer) {
+            if (answer === currentObject.name) {
+                resultElement.textContent = '¡Correcto! ' + currentObject.name + ' = ' + currentObject.translation;
+                resultElement.className = 'result correct';
+                score += 10;
+            } else {
+                resultElement.textContent = 'Incorrecto. Es: ' + currentObject.name + ' = ' + currentObject.translation;
+                resultElement.className = 'result incorrect';
+            }
+            
+            scoreValue.textContent = score;
+            disableOptions();
+        }
+
+        // ===== 8. FUNCIONES DEL MODO DE COLORES =====
+        function generateColorQuestion() {
+            // Elegir un color aleatorio
+            currentColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // En lugar de mostrar una imagen, mostrar un cuadro con el color
+            objectImage.style.display = 'none';
+            
+            // Crear un div de color para reemplazar la imagen
+            let colorBox = document.createElement('div');
+            colorBox.id = 'colorBox';
+            colorBox.style.width = '200px';
+            colorBox.style.height = '200px';
+            colorBox.style.backgroundColor = currentColor.hex;
+            colorBox.style.borderRadius = '10px';
+            colorBox.style.border = currentColor.name === 'white' ? '2px solid #ccc' : '2px solid #333';
+            
+            // Limpiar el contenedor de imagen y agregar el cuadro de color
+            document.querySelector('.image-container').innerHTML = '';
+            document.querySelector('.image-container').appendChild(colorBox);
+            
+            // Mostrar la pregunta sobre el color
+            questionText.textContent = `What color is this? (¿De qué color es esto?)`;
+            
+            // Crear opciones de colores
+            colorsContainer.innerHTML = '';
+            
+            // Crear botones de texto para los colores en lugar de círculos de color
+            const colorOptions = shuffleArray([...colors]).slice(0, 4);
+            if (!colorOptions.some(c => c.name === currentColor.name)) {
+                colorOptions[0] = currentColor;
+            }
+            
+            colorOptions.forEach(color => {
+                const colorElement = document.createElement('div');
+                colorElement.className = 'option';
+                colorElement.textContent = color.name;
+                
+                // Dar al botón el color que representa
+                colorElement.style.backgroundColor = color.hex;
+                
+                // Ajustar el color del texto para garantizar contraste
+                const isDarkColor = isColorDark(color.hex);
+                colorElement.style.color = isDarkColor ? 'white' : 'black';
+                
+                // Borde especial para colores claros
+                if (color.name === 'white' || color.name === 'yellow') {
+                    colorElement.style.border = '2px solid #ccc';
+                }
+                
+                colorElement.addEventListener('click', () => {
+                    checkColorAnswer(color.name);
+                });
+                
+                colorsContainer.appendChild(colorElement);
+            });
+        }
+        
+        // Función auxiliar para determinar si un color es oscuro (para contraste)
+        function isColorDark(hexColor) {
+            // Convertir hex a RGB
+            const r = parseInt(hexColor.substr(1, 2), 16);
+            const g = parseInt(hexColor.substr(3, 2), 16);
+            const b = parseInt(hexColor.substr(5, 2), 16);
+            
+            // Calcular luminosidad
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return luminance < 0.5;
+        }
+
+        // Verificar respuesta de color
+        function checkColorAnswer(answer) {
+            if (answer === currentColor.name) {
+                resultElement.textContent = '¡Correcto! ' + currentColor.name + ' = ' + currentColor.translation;
+                resultElement.className = 'result correct';
+                score += 10;
+            } else {
+                resultElement.textContent = 'Incorrecto. Es: ' + currentColor.name + ' = ' + currentColor.translation;
+                resultElement.className = 'result incorrect';
+            }
+            
+            scoreValue.textContent = score;
+            disableOptions();
+        }
+
+        // Deshabilitar opciones después de responder
+        function disableOptions() {
+            if (currentMode === 'objects') {
+                const options = optionContainer.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.style.pointerEvents = 'none';
+                });
+            } else {
+                const colorOptions = colorsContainer.querySelectorAll('.option');
+                colorOptions.forEach(option => {
+                    option.style.pointerEvents = 'none';
+                });
+            }
+        }
+
+        // ===== 9. FUNCIONES DE LA CANCIÓN DEL ALFABETO =====
+
+// Función para envolver cada letra en un span
+function wrapLettersInSpans() {
+    // Obtener todas las líneas de la canción
+    const lines = document.querySelectorAll('.lyrics');
+    
+    lines.forEach(line => {
+        // Obtener el texto original
+        const text = line.textContent;
+        
+        // Crear un nuevo contenido donde cada letra está en un span
+        let newContent = '';
+        for (let i = 0; i < text.length; i++) {
+            if (text[i] !== ' ') {
+                newContent += `<span>${text[i]}</span>`;
+            } else {
+                newContent += ' ';
+            }
+        }
+        
+        // Reemplazar el contenido
+        line.innerHTML = newContent;
+    });
+}
+
+// Función para resetear el estado de las líneas
+function resetLyrics() {
+    const lines = document.querySelectorAll('.lyrics');
+    lines.forEach(line => {
+        line.classList.remove('active-line');
+    });
+}
+
+// Función para reproducir la canción
+function playAlphabetSong() {
+    // Obtener el elemento de audio
+    const audioElement = document.getElementById('alphabetSongAudio');
+    
+    // Solo reiniciar si no está pausado
+    if (audioElement.paused && audioElement.currentTime === 0) {
+        // Si está en el inicio, empezar desde el principio
+        resetLyrics();
+        audioElement.play();
+    } else if (audioElement.paused) {
+        // Si estaba pausado, continuar desde donde estaba
+        audioElement.play();
+    } else {
+        // Si ya está reproduciendo, no hacer nada
+        return;
+    }
+    
+    // Verificar si ya estamos en una línea basada en el tiempo actual
+    updateActiveLine(audioElement.currentTime);
+    
+    // Reiniciar la animación si estaba detenida
+    if (!alphabetSongInterval) {
+        // Establecer un intervalo para comprobar el tiempo periódicamente
+        alphabetSongInterval = setInterval(function() {
+            updateActiveLine(audioElement.currentTime);
+        }, 100); // Comprobar cada 100ms
+    }
+    
+    // Configurar los botones
+    document.getElementById('playBtn').disabled = true;
+    document.getElementById('pauseBtn').disabled = false;
+    document.getElementById('rewindBtn').disabled = false;
+    document.getElementById('forwardBtn').disabled = false;
+    document.getElementById('resetBtn').disabled = false;
+    
+    // Detener todo cuando termine el audio
+    audioElement.onended = function() {
+        stopAlphabetSong();
+    };
+}
+
+// Función para pausar la canción
+function pauseAlphabetSong() {
+    const audioElement = document.getElementById('alphabetSongAudio');
+    
+    if (!audioElement.paused) {
+        audioElement.pause();
+        
+        // Pausar la comprobación de tiempo
+        clearInterval(alphabetSongInterval);
+        alphabetSongInterval = null;
+        
+        // Actualizar botones
+        document.getElementById('playBtn').disabled = false;
+        document.getElementById('pauseBtn').disabled = true;
+    }
+}
+
+// Función para detener completamente la canción
+function stopAlphabetSong() {
+    const audioElement = document.getElementById('alphabetSongAudio');
+    
+    audioElement.pause();
+    audioElement.currentTime = 0;
+    
+    // Detener la comprobación de tiempo
+    clearInterval(alphabetSongInterval);
+    alphabetSongInterval = null;
+    resetLyrics();
+    
+    // Resetear los botones
+    document.getElementById('playBtn').disabled = false;
+    document.getElementById('pauseBtn').disabled = true;
+    document.getElementById('rewindBtn').disabled = false;
+    document.getElementById('forwardBtn').disabled = false;
+    
+    // Restablecer línea actual
+    currentLine = 0;
+}
+
+// Función para retroceder 10 segundos
+function rewindTenSeconds() {
+    const audioElement = document.getElementById('alphabetSongAudio');
+    // Calcular el nuevo tiempo (no permitir valores negativos)
+    let newTime = audioElement.currentTime - 10;
+    if (newTime < 0) newTime = 0;
+    
+    // Establecer el nuevo tiempo
+    audioElement.currentTime = newTime;
+    
+    // Actualizar la línea activa basada en el nuevo tiempo
+    updateActiveLine(newTime);
+}
+
+// Función para avanzar 10 segundos
+function forwardTenSeconds() {
+    const audioElement = document.getElementById('alphabetSongAudio');
+    // Calcular el nuevo tiempo (no sobrepasar la duración)
+    let newTime = audioElement.currentTime + 10;
+    if (newTime > audioElement.duration) newTime = audioElement.duration;
+    
+    // Establecer el nuevo tiempo
+    audioElement.currentTime = newTime;
+    
+    // Actualizar la línea activa basada en el nuevo tiempo
+    updateActiveLine(newTime);
+}
+
+// Nueva función para actualizar la línea activa basada en el tiempo actual
+// Nueva función para actualizar la línea activa basada en el tiempo actual
+function updateActiveLine(currentTime) {
+    // Configuración de los tiempos según los datos proporcionados
+    const lineTimings = [
+        { start: 14, end: 21 },  // Línea 1: A-B-C-D-E-F-G (comienza en 14s)
+        { start: 21, end: 28 },  // Línea 2: H-I-J-K-L-M-N-O-P (comienza en 21s)
+        { start: 28, end: 35 },  // Línea 3: Q-R-S-T-U-V (comienza en 28s)
+        { start: 35, end: 42 },  // Línea 4: W-X-Y and Z
+        { start: 42, end: 48 },  // Línea 5: Now I know my ABCs (comienza en 42s)
+        { start: 48, end: 55 }   // Línea 6: Next time won't you sing with me? (comienza en 48s)
+    ];
+    
+    // Resetear todas las líneas primero
+    resetLyrics();
+    
+    // Comprobar en qué línea estamos según el tiempo actual
+    for (let i = 0; i < lineTimings.length; i++) {
+        // Verificar si estamos dentro del rango de tiempo de esta línea
+        // Usamos >= para el inicio y < para el final para evitar problemas en los límites
+        if (currentTime >= lineTimings[i].start && currentTime < lineTimings[i].end) {
+            // Actualizar la línea activa
+            currentLine = i + 1;
+            document.getElementById('line' + currentLine).classList.add('active-line');
+            return;
+        }
+    }
+    
+    // Si el tiempo está antes del inicio de la primera línea
+    if (currentTime < lineTimings[0].start) {
+        currentLine = 0;
+        return;
+    }
+    
+    // Si el tiempo está después del final de la última línea
+    if (currentTime >= lineTimings[lineTimings.length - 1].end) {
+        currentLine = lineTimings.length; // Última línea
+        document.getElementById('line' + currentLine).classList.add('active-line');
+        return;
+    }
+    
+    // Si no entramos en ninguna condición anterior, desactivamos todas las líneas
+    currentLine = 0;
+}
+
+// Inicialización de controles
+function initSongControls() {
+    document.getElementById('playBtn').addEventListener('click', playAlphabetSong);
+    document.getElementById('pauseBtn').addEventListener('click', pauseAlphabetSong);
+    document.getElementById('rewindBtn').addEventListener('click', rewindTenSeconds);
+    document.getElementById('forwardBtn').addEventListener('click', forwardTenSeconds);
+    document.getElementById('resetBtn').addEventListener('click', stopAlphabetSong);
+}
+
+// Asegurarnos de inicializar cuando cargue la página
+window.addEventListener('DOMContentLoaded', function() {
+    wrapLettersInSpans();
+    initSongControls();
+});
+
+        // ===== 10. FUNCIONES DEL JUEGO DEL ALFABETO =====
+        function createAlphabetBoard() {
+            const alphabetBoard = document.getElementById('alphabetBoard');
+            alphabetBoard.innerHTML = '';
+            
+            // Generar las 26 letras del alfabeto
+            for (let i = 0; i < 26; i++) {
+                const letter = String.fromCharCode(65 + i); // A=65, B=66, etc.
+                
+                const tile = document.createElement('div');
+                tile.className = 'alphabet-tile';
+                tile.textContent = letter;
+                tile.dataset.letter = letter;
+                
+                tile.addEventListener('click', () => {
+                    checkLetterClick(letter);
+                });
+                
+                alphabetBoard.appendChild(tile);
+            }
+        }
+
+        function initAlphabetGame() {
+            alphabetGameScore = 0;
+            document.getElementById('abcScore').textContent = alphabetGameScore;
+            lettersFound = [];
+            
+            // Elegir una letra aleatoria que no haya sido encontrada
+            setNewTargetLetter();
+            
+            // Ocultar feedback
+            document.getElementById('correctFeedback').style.display = 'none';
+            document.getElementById('wrongFeedback').style.display = 'none';
+            
+            // Habilitar todas las letras
+            const tiles = document.querySelectorAll('.alphabet-tile');
+            tiles.forEach(tile => {
+                tile.style.pointerEvents = 'auto';
+                tile.style.opacity = '1';
+            });
+        }
+
+        function setNewTargetLetter() {
+            // Si ya se encontraron todas las letras, terminar el juego
+            if (lettersFound.length >= 26) {
+                showGameCompleted();
+                return;
+            }
+            
+            // Obtener letras que aún no se han encontrado
+            const availableLetters = alphabet.filter(letter => !lettersFound.includes(letter));
+            
+            // Elegir una aleatoria
+            currentTargetLetter = availableLetters[Math.floor(Math.random() * availableLetters.length)];
+            document.getElementById('targetLetter').textContent = currentTargetLetter;
+        }
+
+        function checkLetterClick(letter) {
+            // Ocultar feedback anterior
+            document.getElementById('correctFeedback').style.display = 'none';
+            document.getElementById('wrongFeedback').style.display = 'none';
+            
+            if (letter === currentTargetLetter) {
+                // ¡Correcto!
+                document.getElementById('correctFeedback').style.display = 'flex';
+                
+                // Aumentar puntuación
+                alphabetGameScore++;
+                document.getElementById('abcScore').textContent = alphabetGameScore;
+                
+                // Marcar como encontrada
+                lettersFound.push(letter);
+                
+                // Deshabilitar la letra encontrada
+                const tiles = document.querySelectorAll('.alphabet-tile');
+                tiles.forEach(tile => {
+                    if (tile.textContent === letter) {
+                        tile.style.opacity = '0.5';
+                        tile.style.pointerEvents = 'none';
+                    }
+                });
+                
+                // Pasar a la siguiente letra después de un breve retraso
+                setTimeout(() => {
+                    setNewTargetLetter();
+                    document.getElementById('correctFeedback').style.display = 'none';
+                }, 1500);
+            } else {
+                // Incorrecto
+                document.getElementById('wrongFeedback').style.display = 'flex';
+                
+                // Ocultar feedback después de un breve retraso
+                setTimeout(() => {
+                    document.getElementById('wrongFeedback').style.display = 'none';
+                }, 1500);
+            }
+        }
+
+        function showGameCompleted() {
+            document.getElementById('letterInstruction').textContent = '¡Felicidades! Has encontrado todas las letras.';
+            document.getElementById('targetLetter').textContent = '';
+        }
+
+        // ===== 11. FUNCIONES UTILITARIAS =====
+        // Función para mezclar array aleatoriamente
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // ===== 12. INICIAR JUEGO CUANDO CARGUE LA PÁGINA =====
+        window.onload = initGame;
+    </script>
+</body>
+</html>
